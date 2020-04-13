@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <style>
+    </style>
+</head>
+
+<body id="body">
+
+    <script>
+    var socket = null;
+    
+    // websocket in javascript
+    const socketMessageListener = (e) => {
+        console.log(e.data);
+        var data = JSON.parse(e.data);
+        if (data == null) {
+            console.log('problem parsing');
+            return;
+        }
+    };
+    const socketOpenListener = (e) => {
+        console.log('Connected');
+        socket.send(JSON.stringify({ message: "hello" }))
+    };
+    const socketErrorListener = (e) => {
+        console.error(e);
+    }
+    const socketCloseListener = (e) => {
+        if (socket) {
+            console.log('Disconnected.');
+        }
+        var url = window.origin.replace("http", "ws") + '/ws?domain=domainxxyy';
+        socket = new WebSocket(url);
+        socket.onopen = socketOpenListener;
+        socket.onmessage = socketMessageListener;
+        socket.onclose = socketCloseListener;
+        socket.onerror = socketErrorListener;
+    };
+    window.addEventListener('load', (event) => {
+        socketCloseListener();
+    });
+    </script>
+</body>
+
+</html>
